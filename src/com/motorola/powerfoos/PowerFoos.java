@@ -25,6 +25,7 @@ public class PowerFoos extends Activity {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getApplicationContext(), "User pressed start", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(PowerFoos.this, GameActivity.class));
                 }
             });
         }
