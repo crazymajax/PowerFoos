@@ -3,8 +3,11 @@
     <style name="AppTheme" parent="android:Theme.Light" />
 
     <style name="MainMenuButton">
-<!--         <item name="android:background">@null</item> -->
-        <item name="android:textSize">18sp</item>
-    </style>
+        <item name="android:background">@null</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:padding">5dp</item>
+<!--         <item name="android:typeface">@fonts/8bitoperator_jve.ttf</item>
+ -->    </style>
 
 </resources>
