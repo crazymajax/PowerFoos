@@ -71,14 +71,14 @@ public class WelcomeScreen extends Activity {
                     });
         }
 
-        Cursor cursor = getContacts();
-        TextView contactView = (TextView) findViewById(R.id.contact_info);
-        while (cursor.moveToNext()) {
-            String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-            contactView.append("Name: ");
-            contactView.append(displayName);
-            contactView.append("\n");
-        }
+//        Cursor cursor = getContacts();
+//        TextView contactView = (TextView) findViewById(R.id.contact_info);
+//        while (cursor.moveToNext()) {
+//            String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+//            contactView.append("Name: ");
+//            contactView.append(displayName);
+//            contactView.append("\n");
+//        }
     }
 
 
