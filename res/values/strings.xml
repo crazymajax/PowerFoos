@@ -139,4 +139,5 @@
     <string name="zxing_url">http://code.google.com/p/zxing</string>
 
     <string name="title_activity_scan_qrcode">ScanQRCodeActivity</string>
+    <string name="next">Next</string>
 </resources>

@@ -30,7 +30,8 @@ public class PowerFoos extends Activity {
                     //Toast.makeText(getApplicationContext(), "User pressed start", Toast.LENGTH_SHORT).show();
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     if (pref.getString(FOOS_EMAIL_ID, null)!=null) {
-                    startActivity(new Intent(PowerFoos.this, GameActivity.class));
+                    //startActivity(new Intent(PowerFoos.this, GameActivity.class));
+                        onStartClicked(v);
                     }else{
                         onStartClicked(v);
                     }

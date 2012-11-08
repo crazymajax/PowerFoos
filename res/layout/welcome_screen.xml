@@ -1,14 +1,16 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/textView_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
         android:text="@string/welcome_string"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         tools:context=".PowerFoos" />
 
     <TextView
@@ -20,7 +22,8 @@
         android:layout_marginRight="24dp"
         android:layout_marginTop="9dp"
         android:text="@string/select_an_account"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@id/textView_welcome" />
 
     <Spinner
         android:id="@+id/accounts_spinner"
@@ -29,9 +32,21 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:layout_marginTop="6dp" />
+        android:layout_marginTop="6dp"
+        android:layout_below="@id/textView_select_account"/>
 
-    <ScrollView
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        style="@style/MainMenuButton"
+        android:onClick="onNextClicked"
+        android:text="@string/next" />
+
+
+    <!-- <ScrollView
         android:id="@+id/scroll_card"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -54,6 +69,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </RelativeLayout>
-    </ScrollView>
+    </ScrollView> -->
 
-</LinearLayout>
+</RelativeLayout>
