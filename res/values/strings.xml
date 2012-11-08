@@ -14,5 +14,7 @@
     <string name="player2">Player2</string>
     <string name="player3">Player3</string>
     <string name="player4">Player4</string>
-
+    <string name="title_activity_power_foos">PowerFoos</string>
+    <string name="welcome_string">Welcome</string>
+    <string name="select_an_account">Select an account to get started</string>
 </resources>

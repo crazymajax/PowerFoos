@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:text="@string/credits"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView

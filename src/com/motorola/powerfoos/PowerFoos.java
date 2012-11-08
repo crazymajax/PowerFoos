@@ -2,13 +2,16 @@ package com.motorola.powerfoos;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
 public class PowerFoos extends Activity {
+    private static final String FOOS_EMAIL_ID = "foos_email_id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,8 +27,13 @@ public class PowerFoos extends Activity {
             start.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "User pressed start", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "User pressed start", Toast.LENGTH_SHORT).show();
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    if (pref.getString(FOOS_EMAIL_ID, null)!=null) {
                     startActivity(new Intent(PowerFoos.this, GameActivity.class));
+                    }else{
+                        onStartClicked(v);
+                    }
                 }
             });
         }
@@ -43,7 +51,6 @@ public class PowerFoos extends Activity {
             credits.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "User pressed credits", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(PowerFoos.this, CreditsActivity.class));
                 }
             });
@@ -53,7 +60,8 @@ public class PowerFoos extends Activity {
             help.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "User pressed help", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "User pressed help", Toast.LENGTH_SHORT).show();
+                    onStartClicked(v);
                 }
             });
         }
@@ -66,4 +74,8 @@ public class PowerFoos extends Activity {
 //    }
 
 
+    public void onStartClicked(View v) {
+        Intent intent = new Intent (this,WelcomeScreen.class);
+        startActivity(intent);
+    }
 }
