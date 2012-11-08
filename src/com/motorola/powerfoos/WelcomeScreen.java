@@ -6,6 +6,7 @@ import java.util.List;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -71,18 +72,18 @@ public class WelcomeScreen extends Activity {
                     });
         }
 
-//        Cursor cursor = getContacts();
-//        TextView contactView = (TextView) findViewById(R.id.contact_info);
-//        while (cursor.moveToNext()) {
-//            String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-//            contactView.append("Name: ");
-//            contactView.append(displayName);
-//            contactView.append("\n");
-//        }
+        /*Cursor cursor = getContacts();
+        TextView contactView = (TextView) findViewById(R.id.contact_info);
+        while (cursor.moveToNext()) {
+            String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+            contactView.append("Name: ");
+            contactView.append(displayName);
+            contactView.append("\n");
+        }*/
     }
 
 
-    private Cursor getContacts() {
+    /*private Cursor getContacts() {
         // Run query
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
         String[] projection = new String[] { ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME };
@@ -91,7 +92,7 @@ public class WelcomeScreen extends Activity {
         String sortOrder = ContactsContract.Contacts.DISPLAY_NAME+ " COLLATE LOCALIZED ASC";
         return managedQuery(uri, projection, selection, selectionArgs, sortOrder);
 
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,5 +100,9 @@ public class WelcomeScreen extends Activity {
         return true;
     }
 
+    public void onNextClicked(View v) {
+        Intent intent = new Intent (this,GameActivity.class);
+        startActivity(intent);
+    }
 
 }
