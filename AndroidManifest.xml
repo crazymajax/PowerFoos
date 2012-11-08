@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+     <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -36,6 +37,32 @@
             android:name=".WelcomeScreen"
             android:screenOrientation="landscape">
         </activity>
+    
+    	<!-- Added for qrcode scanning-->
+    	<activity
+            android:name=".ScanQRCodeActivity"
+            android:label="@string/title_activity_scan_qrcode" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+   
+        
+        <activity android:name="com.google.zxing.client.android.CaptureActivity"
+              android:screenOrientation="landscape"
+              android:clearTaskOnLaunch="true"
+              android:stateNotNeeded="true"
+              android:configChanges="orientation|keyboardHidden"
+              android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+              android:windowSoftInputMode="stateAlwaysHidden">
+		      <intent-filter>
+		        <action android:name="com.google.zxing.client.android.SCAN"/>
+		        <category android:name="android.intent.category.DEFAULT"/>
+		      </intent-filter>
+    	</activity>
+    
     </application>
 
 </manifest>
