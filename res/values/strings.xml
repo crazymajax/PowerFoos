@@ -10,5 +10,9 @@
     <string name="credits_text">\nThis app was made during\nthe 2012 Motorola Hackathon by:\n\nFrancois Dermu\n\nGnanam Madhavan\n\nParikshit Dharawat\n\nAvinash Arora\n\nKristin Gray\n\n\n\nSpecial Thanks to our leaders for making this possible.</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_game">GameActivity</string>
+    <string name="player1">Player1</string>
+    <string name="player2">Player2</string>
+    <string name="player3">Player3</string>
+    <string name="player4">Player4</string>
 
 </resources>

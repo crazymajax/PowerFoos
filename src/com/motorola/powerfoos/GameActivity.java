@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
@@ -18,6 +20,7 @@ import android.support.v4.app.NavUtils;
 public class GameActivity extends Activity {
     int team1score = 0;
     int team2score = 0;
+    boolean gameIsPaused = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,13 +31,26 @@ public class GameActivity extends Activity {
         container.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                TextView text = (TextView)findViewById(R.id.text);
+
                 if (event.getButtonState() == MotionEvent.BUTTON_PRIMARY) {
                     team1score++;
-                } else {
+                } else if (event.getButtonState() == MotionEvent.BUTTON_SECONDARY) {
                     team2score++;
+                } else if (!gameIsPaused) {
+                    gameIsPaused = true;
+                    text.setText("Game Paused");
+                    Animation anim = new AlphaAnimation(0.0f, 1.0f);
+                    anim.setDuration(500);
+                    anim.setStartOffset(20);
+                    anim.setRepeatMode(Animation.REVERSE);
+                    anim.setRepeatCount(Animation.INFINITE);
+                    text.startAnimation(anim);
+                    return false;
                 }
+                gameIsPaused = false;
+                text.getAnimation().cancel();
 
-                TextView text = (TextView)findViewById(R.id.text);
                 text.setText(team1score + " - " + team2score);
                 return false;
             }
