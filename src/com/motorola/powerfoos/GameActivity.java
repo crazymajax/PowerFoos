@@ -328,6 +328,7 @@ public class GameActivity extends Activity {
             //Toast.makeText(appCtx, contents, //Toast.LENGTH_LONG).show();
 
             if (contents == null) {
+                GameActivity.this.finish();
                 return;
             }
 
