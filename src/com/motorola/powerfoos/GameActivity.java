@@ -4,11 +4,14 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -25,14 +28,28 @@ import com.google.zxing.client.android.IntentResult;
 @TargetApi(14)
 public class GameActivity extends Activity {
     private static final String TAG = GameActivity.class.getSimpleName();
+    public static int SCORE_REFRESH_DELAY = 1000;
+    private static final int PAUSE_LENGTH = 5000;
     private int team1score = 0;
     private int team2score = 0;
     private boolean gameIsPaused = false;
     private WakeLock mWakeLock;
-    private String tableId = null;
-    private Integer position = 0;
+    private String mPlayerId = null;
+    private String mTableId = null;
+    private Integer mPosition = 0;
     private MediaPlayer mp;
     private Handler mHandler = new Handler();
+    private Handler mServerHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String result = data.getString("result");
+            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+            Log.d(TAG, "MAJAX: Server Result: " + result);
+        }
+    };
+    private ServerRequest sr = new ServerRequest(mServerHandler);
 
     private Runnable unPause = new Runnable() {
         @Override
@@ -45,6 +62,15 @@ public class GameActivity extends Activity {
                     resumeGame(text, text2);
                 }
             });
+        }
+    };
+
+    private Runnable refreshData = new Runnable() {
+        @Override
+        public void run() {
+            sr.getScore(mTableId);
+            sr.getPlayers(mTableId);
+            mHandler.postDelayed(this, SCORE_REFRESH_DELAY);
         }
     };
 
@@ -79,10 +105,15 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        if (tableId == null) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mPlayerId = pref.getString(WelcomeScreen.FOOS_EMAIL_ID, null);
+
+        if (mTableId == null) {
             IntentIntegrator integrator = new IntentIntegrator(this);
             integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
         }
+
+        mHandler.postDelayed(refreshData, SCORE_REFRESH_DELAY);
 
         View container = findViewById(R.id.container);
         container.setOnTouchListener(new OnTouchListener() {
@@ -97,13 +128,14 @@ public class GameActivity extends Activity {
                         team1score++;
                         playGoalMusic();
                         pauseGame(text, text2);
-                        mHandler.postDelayed(unPause, 5000);
+                        mHandler.postDelayed(unPause, PAUSE_LENGTH);
                     } else if (event.getButtonState() == MotionEvent.BUTTON_SECONDARY) {
                         team2score++;
                         playGoalMusic();
                         pauseGame(text, text2);
-                        mHandler.postDelayed(unPause, 5000);
+                        mHandler.postDelayed(unPause, PAUSE_LENGTH);
                     }
+                    sr.setScore(mTableId, String.valueOf(team1score), String.valueOf(team2score));
                 }
                 return false;
             }
@@ -111,10 +143,13 @@ public class GameActivity extends Activity {
     }
 
     private void updateScore(TextView text, TextView text2) {
-        text.setText(team1score + " - ");
-        text2.setText(String.valueOf(team2score));
+        text.setText(team2score + " - ");
+        text2.setText(String.valueOf(team1score));
     }
 
+    /**
+     * This gets called when the QR code is scanned
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
@@ -123,28 +158,34 @@ public class GameActivity extends Activity {
             Log.d(TAG, "scan result is:" + contents);
             Toast.makeText(getApplicationContext(), contents, Toast.LENGTH_LONG).show();
 
+            if (contents == null) {
+                return;
+            }
+
             String[] array = contents.split("::");
             if (array == null || array.length != 2) {
                 Toast.makeText(getApplicationContext(), "Invalid QR code: " + contents, Toast.LENGTH_LONG).show();
             }
-            tableId = array[0];
-            position = Integer.valueOf(array[1]);
+            mTableId = array[0];
+            mPosition = Integer.valueOf(array[1]);
+
+            sr.joinGame(mPlayerId, mPosition.toString(), mTableId);
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     View v = findViewById(R.id.player1);
-                    if (position == 2) {
+                    if (mPosition == 2) {
                         v = findViewById(R.id.player2);
-                    } else if (position == 3) {
+                    } else if (mPosition == 3) {
                         v = findViewById(R.id.player3);
-                    } else if (position == 4) {
+                    } else if (mPosition == 4) {
                         v = findViewById(R.id.player4);
                     }
                     v.setScaleX(1.5f);
                     v.setScaleY(1.5f);
 
-                    if (position < 3) {
+                    if (mPosition < 3) {
                         View c = findViewById(R.id.container);
                         c.setRotation(180);
                     }
