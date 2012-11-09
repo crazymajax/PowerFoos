@@ -17,6 +17,7 @@
     <string name="title_activity_power_foos">PowerFoos</string>
     <string name="welcome_string">Welcome</string>
     <string name="select_an_account">Select an account to get started</string>
+    <string name="welcome_text">Welcome to PowerFoos!!! Lets you automatically keep scores and a leaderboard to view online games stats.</string>
 
     <!-- Preferences -->
     <string name="preferences_sound_on">Play sounds:</string>

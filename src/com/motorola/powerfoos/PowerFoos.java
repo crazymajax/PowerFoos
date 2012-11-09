@@ -33,6 +33,7 @@ public class PowerFoos extends Activity {
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     if (pref.getString(FOOS_EMAIL_ID, null)!=null) {
                         startActivity(new Intent(PowerFoos.this, GameActivity.class));
+                        //onStartClicked(v);
                     }else{
                         onStartClicked(v);
                     }
