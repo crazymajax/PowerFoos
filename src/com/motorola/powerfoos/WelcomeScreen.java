@@ -2,31 +2,52 @@ package com.motorola.powerfoos;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WelcomeScreen extends Activity {
+@TargetApi(11)
+public class WelcomeScreen extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String TAG =
         WelcomeScreen.class.getSimpleName();
     static String mSelectedEmail;
+    private Bitmap userPhoto = null;
+    private String userName = null;
+    private long mContactID;
+    private long mPhotoID;
     private static final String ACCOUNT_TYPE_GMAIL	= "com.google";
     public static final String FOOS_EMAIL_ID = "foos_email_id";
+    public static final String FOOS_CONTACT_ID = "foos_contact_id";
+    public static final String FOOS_PHOTO_ID = "foos_photo_id";
     private Handler mServerHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -39,6 +60,7 @@ public class WelcomeScreen extends Activity {
     private ServerRequest sr;
 
 
+    @TargetApi(11)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +99,8 @@ public class WelcomeScreen extends Activity {
                             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor ed = pref.edit();
                             ed.putString(FOOS_EMAIL_ID, mSelectedEmail);
+                            ed.putLong(FOOS_CONTACT_ID, mContactID);
+                            ed.putLong(FOOS_PHOTO_ID, mPhotoID);
                             ed.commit();
                         }
                         @Override
@@ -94,8 +118,124 @@ public class WelcomeScreen extends Activity {
             contactView.append(displayName);
             contactView.append("\n");
         }*/
+        getLoaderManager().initLoader(0, null, this);
     }
 
+    @TargetApi(14)
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
+        return new CursorLoader(this,
+                // Retrieve data rows for the device user's 'profile' contact.
+                Uri.withAppendedPath(
+                        ContactsContract.Profile.CONTENT_URI,
+                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY),
+                ProfileQuery.PROJECTION,
+
+                // Select only email addresses.
+                ContactsContract.Contacts.Data.MIMETYPE + " = ?",
+                new String[]{ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE},
+
+                // Show primary email addresses first. Note that there won't be
+                // a primary email address if the user hasn't specified one.
+                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        List<String> emails = new ArrayList<String>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            final String name = cursor.getString(ProfileQuery.DISPLAY_NAME);
+            mPhotoID = cursor.getLong(ProfileQuery.PHOTO_ID);
+            final String email = cursor.getString(ProfileQuery.ADDRESS);
+            final int isPrimary = cursor.getInt(ProfileQuery.IS_PRIMARY);
+            mContactID = cursor.getLong(ProfileQuery._ID);
+
+            Log.d(TAG, "MAJAX: -------------------------------");
+            Log.d(TAG, "MAJAX: name = " + name);
+            Log.d(TAG, "MAJAX: photoId = " + mPhotoID);
+            Log.d(TAG, "MAJAX: email = " + email);
+            Log.d(TAG, "MAJAX: isPrimary = " + isPrimary);
+            Log.d(TAG, "MAJAX: id = " + mContactID);
+            if (mSelectedEmail != null && mSelectedEmail.equals(email)) {
+                Log.d(TAG, "MAJAX: isSelected = YES");
+                userPhoto = loadContactPhoto(getContentResolver(), mContactID, mPhotoID);
+                userName = name;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView nam = (TextView)findViewById(R.id.contactName);
+                        nam.setText("Name: " + name);
+                        ImageView image = (ImageView)findViewById(R.id.contactPhoto);
+                        image.setImageBitmap(userPhoto);
+                    }
+                });
+            }
+
+            emails.add(email);
+            // Potentially filter on ProfileQuery.IS_PRIMARY
+            cursor.moveToNext();
+        }
+    }
+
+    @TargetApi(11)
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    }
+
+    private interface ProfileQuery {
+        String[] PROJECTION = {
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+                ContactsContract.Profile.DISPLAY_NAME,
+                ContactsContract.Contacts.PHOTO_ID,
+                ContactsContract.Contacts._ID
+        };
+
+        int ADDRESS = 0;
+        int IS_PRIMARY = 1;
+        int DISPLAY_NAME = 2;
+        int PHOTO_ID = 3;
+        int _ID = 4;
+    }
+
+    public static Bitmap loadContactPhoto(ContentResolver cr, long  id,long photo_id) {
+
+        Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id);
+        InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(cr, uri);
+        if (input != null) {
+            return BitmapFactory.decodeStream(input);
+        } else {
+            Log.d("PHOTO","first try failed to load photo");
+        }
+
+        byte[] photoBytes = null;
+
+        Uri photoUri = ContentUris.withAppendedId(ContactsContract.Data.CONTENT_URI, photo_id);
+
+        Cursor c = cr.query(photoUri, new String[] {ContactsContract.CommonDataKinds.Photo.PHOTO}, null, null, null);
+
+        try
+        {
+            if (c.moveToFirst())
+                photoBytes = c.getBlob(0);
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+
+        } finally {
+
+            c.close();
+        }
+
+        if (photoBytes != null)
+            return BitmapFactory.decodeByteArray(photoBytes,0,photoBytes.length);
+        else
+            Log.d("PHOTO","second try also failed");
+        return null;
+    }
 
     /*private Cursor getContacts() {
         // Run query
@@ -117,7 +257,7 @@ public class WelcomeScreen extends Activity {
     public void onNextClicked(View v) {
         Log.d(TAG, "MAJAX: the email selected is: " + mSelectedEmail);
         //and send it to server
-        sr.createPlayer(mSelectedEmail, mSelectedEmail);
+        sr.createPlayer(mSelectedEmail, userName);
         Intent intent = new Intent (this,GameActivity.class);
         startActivity(intent);
     }

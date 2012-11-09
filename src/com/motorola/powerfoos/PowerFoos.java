@@ -1,31 +1,42 @@
 package com.motorola.powerfoos;
 
-import com.google.zxing.client.android.PreferencesActivity;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
+
+import com.google.zxing.client.android.PreferencesActivity;
 
 public class PowerFoos extends Activity {
     private static final String FOOS_EMAIL_ID = "foos_email_id";
+    private MediaPlayer mp;
+    private boolean mSoundOn = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_power_foos);
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mSoundOn = pref.getBoolean("sound_on", true);
+        playIntroMusic();
+
         Button start = (Button)findViewById(R.id.start);
         Button settings = (Button)findViewById(R.id.settings);
         Button credits = (Button)findViewById(R.id.credits);
         Button help = (Button)findViewById(R.id.help);
 
+//        Typeface font = Typeface.createFromAsset(getAssets(), "8-BIT WONDER.ttf");
+
         if (start != null) {
+//            start.setTypeface(font);
             start.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -41,6 +52,7 @@ public class PowerFoos extends Activity {
         }
 
         if (settings != null) {
+//            settings.setTypeface(font);
             settings.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -51,6 +63,7 @@ public class PowerFoos extends Activity {
         }
 
         if (credits != null) {
+//            credits.setTypeface(font);
             credits.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -60,6 +73,7 @@ public class PowerFoos extends Activity {
         }
 
         if (help != null) {
+//            help.setTypeface(font);
             help.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,9 +90,26 @@ public class PowerFoos extends Activity {
 //        return true;
 //    }
 
-
     public void onStartClicked(View v) {
         Intent intent = new Intent (this,WelcomeScreen.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mp = MediaPlayer.create(getApplicationContext(), R.raw.intro);
+    }
+
+    @Override
+    protected void onPause() {
+        if (mp != null)
+            mp.release();
+        super.onPause();
+    }
+
+    private void playIntroMusic(){
+        if (mSoundOn && mp != null)
+            mp.start();
     }
 }

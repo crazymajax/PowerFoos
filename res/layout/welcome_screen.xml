@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/textView_welcome"
@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
         style="@style/MainMenuButton"
         android:onClick="onNextClicked"
         android:text="@string/next" />
@@ -70,5 +71,21 @@
 
             </RelativeLayout>
     </ScrollView> -->
+
+    <ImageView
+        android:id="@+id/contactPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/next_button"
+        android:layout_alignRight="@+id/textView_select_account"
+        android:src="@drawable/default_usrimg_yellow" />
+
+    <TextView
+        android:id="@+id/contactName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/contactPhoto"
+        android:layout_alignLeft="@+id/accounts_spinner"
+        android:text="Name: " />
 
 </RelativeLayout>

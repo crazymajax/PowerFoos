@@ -3,6 +3,8 @@ package com.motorola.powerfoos;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -187,6 +189,10 @@ public class ServerRequest {
      * @param name Name of the player
      */
     public void createPlayer(String playerId, String name) {
+        try {
+            name = URLEncoder.encode(name,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        }
         //Create a url using the server address and the parameters
         mUrl = String.format("http://%s:8080/FoosballServer/player/create?playerId=%s&name=%s",
                 ServerRequest.sServerAddress, playerId, name);

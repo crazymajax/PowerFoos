@@ -17,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_medium"
+            android:typeface="monospace"
             android:text="0  - "
             android:textSize="50dp"
             tools:context=".GameActivity" />
@@ -27,6 +28,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_medium"
             android:paddingBottom="5dp"
+            android:typeface="monospace"
             android:text="0"
             android:textSize="50dp"
             android:rotation="180"

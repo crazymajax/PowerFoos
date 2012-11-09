@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,8 +29,6 @@ import com.google.zxing.client.android.IntentResult;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 @TargetApi(14)
 public class GameActivity extends Activity {
     private static final String TAG = GameActivity.class.getSimpleName();
@@ -47,6 +46,7 @@ public class GameActivity extends Activity {
     private String mTableId = null;
     private Integer mPosition = 0;
     private MediaPlayer mp;
+    private ImageView mMyImage = null;
     private Handler mHandler = new Handler();
     private Handler mServerHandler = new Handler() {
         @Override
@@ -92,10 +92,21 @@ public class GameActivity extends Activity {
                     final String n1 = jObject.has("name1") ? jObject.getString("name1") : null;
                     final String n2 = jObject.has("name2") ? jObject.getString("name2") : null;
                     final String n3 = jObject.has("name3") ? jObject.getString("name3") : null;
+
+                    Log.d(TAG, "n0 = " + n0);
+                    Log.d(TAG, "n1 = " + n1);
+                    Log.d(TAG, "n2 = " + n2);
+                    Log.d(TAG, "n3 = " + n3);
+
                     final int position1 = jObject.has("position0") ? jObject.getInt("position0") : -1;
                     final int position2 = jObject.has("position1") ? jObject.getInt("position1") : -1;
                     final int position3 = jObject.has("position2") ? jObject.getInt("position2") : -1;
                     final int position4 = jObject.has("position3") ? jObject.getInt("position3") : -1;
+
+                    Log.d(TAG, "position1 = " + position1);
+                    Log.d(TAG, "position2 = " + position2);
+                    Log.d(TAG, "position3 = " + position3);
+                    Log.d(TAG, "position4 = " + position4);
 
                     String[] players = new String[4];
                     if (position1 > 0)
@@ -111,6 +122,11 @@ public class GameActivity extends Activity {
                     final String name2 = players[1];
                     final String name3 = players[2];
                     final String name4 = players[3];
+
+                    Log.d(TAG, "name1 = " + name1);
+                    Log.d(TAG, "name2 = " + name2);
+                    Log.d(TAG, "name3 = " + name3);
+                    Log.d(TAG, "name4 = " + name4);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -238,6 +254,16 @@ public class GameActivity extends Activity {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             mPlayerId = pref.getString(WelcomeScreen.FOOS_EMAIL_ID, null);
             mSoundOn = pref.getBoolean("sound_on", true);
+//            long id = pref.getLong(WelcomeScreen.FOOS_CONTACT_ID, 0);
+//            long photoId = pref.getLong(WelcomeScreen.FOOS_PHOTO_ID, 0);
+//            Bitmap b = WelcomeScreen.loadContactPhoto(getContentResolver(), id, photoId);
+//            Log.d(TAG, "MAJAX: 1id = " + id);
+//            Log.d(TAG, "MAJAX: 1photoId = " + photoId);
+//            Log.d(TAG, "MAJAX: 1UserPhoto = " + b);
+//            if (mMyImage != null && b != null) {
+//                mMyImage.setImageBitmap(b);
+//            }
+
             final String winScoreString = pref.getString("winning_score", null);
             if (winScoreString != null) {
                 mWinningScore = Integer.valueOf(winScoreString);
@@ -343,16 +369,29 @@ public class GameActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    View v = findViewById(R.id.player1);
+                    ImageView v = (ImageView)findViewById(R.id.player1);
                     if (mPosition == 2) {
-                        v = findViewById(R.id.player2);
+                        v = (ImageView)findViewById(R.id.player2);
                     } else if (mPosition == 3) {
-                        v = findViewById(R.id.player3);
+                        v = (ImageView)findViewById(R.id.player3);
                     } else if (mPosition == 4) {
-                        v = findViewById(R.id.player4);
+                        v = (ImageView)findViewById(R.id.player4);
                     }
                     v.setScaleX(1.5f);
                     v.setScaleY(1.5f);
+
+//                    mMyImage = v;
+//
+//                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                    long id = pref.getLong(WelcomeScreen.FOOS_CONTACT_ID, 0);
+//                    long photoId = pref.getLong(WelcomeScreen.FOOS_PHOTO_ID, 0);
+//                    Bitmap b = WelcomeScreen.loadContactPhoto(getContentResolver(), id, photoId);
+//                    Log.d(TAG, "MAJAX: 2id = " + id);
+//                    Log.d(TAG, "MAJAX: 2photoId = " + photoId);
+//                    Log.d(TAG, "MAJAX: 2UserPhoto = " + b);
+//                    if (mMyImage != null && b != null) {
+//                        mMyImage.setImageBitmap(b);
+//                    }
 
                     if (mPosition < 3) {
                         View c = findViewById(R.id.container);
