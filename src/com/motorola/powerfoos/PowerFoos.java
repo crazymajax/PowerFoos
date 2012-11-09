@@ -15,38 +15,41 @@ import com.google.zxing.client.android.PreferencesActivity;
 
 public class PowerFoos extends Activity {
     private static final String FOOS_EMAIL_ID = "foos_email_id";
-    private MediaPlayer mp;
-    private boolean mSoundOn = true;
+    private MediaPlayer         mp;
+    private boolean             mSoundOn      = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_power_foos);
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences pref = PreferenceManager
+            .getDefaultSharedPreferences(getApplicationContext());
         mSoundOn = pref.getBoolean("sound_on", true);
         playIntroMusic();
         mp = MediaPlayer.create(getApplicationContext(), R.raw.intro);
         mp.start();
 
-        Button start = (Button)findViewById(R.id.start);
-        Button settings = (Button)findViewById(R.id.settings);
-        Button credits = (Button)findViewById(R.id.credits);
-        Button help = (Button)findViewById(R.id.help);
+        Button start = (Button) findViewById(R.id.start);
+        Button settings = (Button) findViewById(R.id.settings);
+        Button credits = (Button) findViewById(R.id.credits);
+        Button help = (Button) findViewById(R.id.help);
 
-//        Typeface font = Typeface.createFromAsset(getAssets(), "8-BIT WONDER.ttf");
+        // Typeface font = Typeface.createFromAsset(getAssets(), "8-BIT WONDER.ttf");
 
         if (start != null) {
-//            start.setTypeface(font);
+            // start.setTypeface(font);
             start.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(getApplicationContext(), "User pressed start", Toast.LENGTH_SHORT).show();
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    if (pref.getString(FOOS_EMAIL_ID, null)!=null) {
+                    // Toast.makeText(getApplicationContext(), "User pressed start",
+                    // Toast.LENGTH_SHORT).show();
+                    SharedPreferences pref = PreferenceManager
+                        .getDefaultSharedPreferences(getApplicationContext());
+                    if (pref.getString(FOOS_EMAIL_ID, null) != null) {
                         startActivity(new Intent(PowerFoos.this, GameActivity.class));
-                        //onStartClicked(v);
-                    }else{
+                        // onStartClicked(v);
+                    } else {
                         onStartClicked(v);
                     }
                 }
@@ -54,18 +57,19 @@ public class PowerFoos extends Activity {
         }
 
         if (settings != null) {
-//            settings.setTypeface(font);
+            // settings.setTypeface(font);
             settings.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(), "User pressed settings", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getApplicationContext(), "User pressed settings",
+                    // Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(PowerFoos.this, PreferencesActivity.class));
                 }
             });
         }
 
         if (credits != null) {
-//            credits.setTypeface(font);
+            // credits.setTypeface(font);
             credits.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -75,30 +79,32 @@ public class PowerFoos extends Activity {
         }
 
         if (help != null) {
-//            help.setTypeface(font);
+            // help.setTypeface(font);
             help.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(getApplicationContext(), "User pressed help", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getApplicationContext(), "User pressed help",
+                    // Toast.LENGTH_SHORT).show();
                     onStartClicked(v);
                 }
             });
         }
+
+
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.activity_power_foos, menu);
-//        return true;
-//    }
+    // @Override
+    // public boolean onCreateOptionsMenu(Menu menu) {
+    // getMenuInflater().inflate(R.menu.activity_power_foos, menu);
+    // return true;
+    // }
 
     public void onStartClicked(View v) {
-        Intent intent = new Intent (this,WelcomeScreen.class);
+        Intent intent = new Intent(this, WelcomeScreen.class);
         startActivity(intent);
     }
 
     @Override
-
     protected void onResume() {
         super.onResume();
         mp = MediaPlayer.create(getApplicationContext(), R.raw.intro);
@@ -106,14 +112,15 @@ public class PowerFoos extends Activity {
 
     @Override
     protected void onPause() {
-        if (mp != null)
-            mp.release();
+        if (mp != null) mp.release();
         super.onPause();
     }
 
-    private void playIntroMusic(){
-        if (mSoundOn && mp != null)
+    private void playIntroMusic() {
+        if (mSoundOn && mp != null) {
             mp.start();
+        }
+    }
 
     protected void onDestroy() {
         // TODO Auto-generated method stub
@@ -123,3 +130,4 @@ public class PowerFoos extends Activity {
 
     }
 }
+
