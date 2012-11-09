@@ -1,9 +1,22 @@
 package com.motorola.powerfoos;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import com.google.zxing.client.android.IntentIntegrator;
 import com.google.zxing.client.android.IntentResult;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -18,6 +31,8 @@ public class ScanQRCodeActivity extends Activity {
 	Button b1;
 	static String contents;
 	 private final static String TAG = "PowerFoos-ScanCode " ;
+	 String result;
+	 MyHandler mHandler; 
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,18 +44,27 @@ public class ScanQRCodeActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-				//intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-				//startActivityForResult(intent, 0);
-
-				IntentIntegrator integrator = new IntentIntegrator(ScanQRCodeActivity.this);
-	            integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
-				
+				mHandler = new MyHandler();
+				ServerRequest.setServerAddress("10.75.176.65");
+				ServerRequest req = new ServerRequest(mHandler);
+				req.getScore("23456");
+				req.makeRequest();				
 			}
 			
 		}); 
     }
+    
+    
+    class MyHandler extends Handler {
+    	
+    	public void handleMessage(Message msg) {
+    		String result; 
+    		Bundle b = msg.getData();
+    		result = b.getString("result");
+    		
+    		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+    	}
+    }; 
     
     @Override
     public void onResume() {
@@ -83,28 +107,5 @@ public class ScanQRCodeActivity extends Activity {
             Log.d(TAG, "scan result is:" + contents);
             Toast.makeText(getApplicationContext(), contents, Toast.LENGTH_LONG).show();
         }
-    	
-    	/*
-		if (requestCode == 0) {
-			if (resultCode == RESULT_OK) {
-				contents = intent.getStringExtra("SCAN_RESULT");
-				//String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-				Log.i("Barcode Result", contents);
-				if(contents.contains("http:"))
-				{
-					//Intent i1 = new Intent(QRCodeSampleActivity.this, webclass.class);
-					//startActivity(i1);
-				}
-				else
-				{
-					Toast.makeText(getApplicationContext(), contents, 
-							Toast.LENGTH_LONG).show();
-				}
-				// Handle successful scan
-			} else if (resultCode == RESULT_CANCELED) {
-				// Handle cancel
-				Log.i("Barcode Result","Result canceled");
-			}
-		}*/
 	}
 }

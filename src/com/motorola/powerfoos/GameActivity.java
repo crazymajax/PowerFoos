@@ -1,14 +1,10 @@
 package com.motorola.powerfoos;
 
-import com.google.zxing.client.android.IntentIntegrator;
-import com.google.zxing.client.android.IntentResult;
-
-import com.google.zxing.client.android.IntentIntegrator;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -22,6 +18,9 @@ import android.view.animation.Animation;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.client.android.IntentIntegrator;
+import com.google.zxing.client.android.IntentResult;
+
 @TargetApi(14)
 public class GameActivity extends Activity {
     private static final String TAG = GameActivity.class.getSimpleName();
@@ -32,6 +31,7 @@ public class GameActivity extends Activity {
     private WakeLock mWakeLock;
     private String tableId = null;
     private Integer position = 0;
+    private MediaPlayer mp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,12 +56,14 @@ public class GameActivity extends Activity {
                         team1score++;
                         goalTime = currentTime;
                         text.setText(team1score + " - ");
+                        playGoalMusic();
                     }
                 } else if (event.getButtonState() == MotionEvent.BUTTON_SECONDARY) {
                     if((currentTime - goalTime) >= 5000){
                         team2score++;
                         goalTime = currentTime;
                         text2.setText(team2score);
+                        playGoalMusic();
                     }
                 } else if (!gameIsPaused) {
                     gameIsPaused = true;
@@ -153,6 +155,7 @@ public class GameActivity extends Activity {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "My Tag");
         mWakeLock.acquire();
+        mp = MediaPlayer.create(getApplicationContext(), R.raw.beep);
     }
 
     @Override
@@ -160,7 +163,13 @@ public class GameActivity extends Activity {
         // TODO Auto-generated method stub
         if(mWakeLock!=null)
             mWakeLock.release();
+        if(mp!=null)
+            mp.release();
         super.onPause();
+    }
+
+    private void playGoalMusic(){
+        mp.start();
     }
 
 }
