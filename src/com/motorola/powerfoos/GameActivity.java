@@ -270,6 +270,7 @@ public class GameActivity extends Activity {
                         team2score = 0;
                         updateScore(text, text2);
                         sr.setScore(mTableId, String.valueOf(team1score), String.valueOf(team2score));
+                        sr.newGame(mTableId);
                     }
                     return false;
                 }

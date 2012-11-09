@@ -203,4 +203,15 @@ public class ServerRequest {
                 ServerRequest.sServerAddress, tableId);
         makeRequest();
     }
+
+    /**
+     * start a new game.
+     * @param tableId ID of the table
+     */
+    public void newGame(String tableId) {
+        //Create a url using the server address and the parameters
+        mUrl = String.format("http://%s:8080/FoosballServer/game/newGame?tableId=%s",
+                ServerRequest.sServerAddress, tableId);
+        makeRequest();
+    }
 }
