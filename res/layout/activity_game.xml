@@ -13,6 +13,7 @@
         android:layout_centerVertical="true"
         android:padding="@dimen/padding_medium"
         android:text="@string/hello_world"
+        android:textSize="50dp"
         tools:context=".GameActivity" />
 
     <ImageView

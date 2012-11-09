@@ -49,7 +49,10 @@ public class GameActivity extends Activity {
                     return false;
                 }
                 gameIsPaused = false;
-                text.getAnimation().cancel();
+                final Animation animation = text.getAnimation();
+                if (animation != null) {
+                    animation.cancel();
+                }
 
                 text.setText(team1score + " - " + team2score);
                 return false;
