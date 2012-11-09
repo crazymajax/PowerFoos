@@ -82,7 +82,7 @@ public class GameActivity extends Activity {
                                     text.setText(team2score + " Winner!");
                                     text2.setText(team1score + " Loser...");
                                 }
-                            } else {
+                            } else if (!mGameIsPaused) {
                                 updateScore(text, text2);
                             }
                         }
