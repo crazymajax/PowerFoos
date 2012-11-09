@@ -3,6 +3,7 @@ package com.motorola.powerfoos;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -21,6 +22,7 @@ public class GameActivity extends Activity {
     boolean gameIsPaused = false;
     long goalTime = System.currentTimeMillis();
     private WakeLock mWakeLock;
+    private MediaPlayer mp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,11 +39,13 @@ public class GameActivity extends Activity {
                     if((currentTime - goalTime) >= 5000){
                         team1score++;
                         goalTime = currentTime;
+                        playGoalMusic();
                     }
                 } else if (event.getButtonState() == MotionEvent.BUTTON_SECONDARY) {
                     if((currentTime - goalTime) >= 5000){
                         team2score++;
                         goalTime = currentTime;
+                        playGoalMusic();
                     }
                 } else if (!gameIsPaused) {
                     gameIsPaused = true;
@@ -79,6 +83,7 @@ public class GameActivity extends Activity {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "My Tag");
         mWakeLock.acquire();
+        mp = MediaPlayer.create(getApplicationContext(), R.raw.beep);
     }
 
     @Override
@@ -86,7 +91,13 @@ public class GameActivity extends Activity {
         // TODO Auto-generated method stub
         if(mWakeLock!=null)
             mWakeLock.release();
+        if(mp!=null)
+            mp.release();
         super.onPause();
+    }
+
+    private void playGoalMusic(){
+        mp.start();
     }
 
 }
