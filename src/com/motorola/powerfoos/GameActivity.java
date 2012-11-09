@@ -1,5 +1,7 @@
 package com.motorola.powerfoos;
 
+import org.json.JSONObject;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -22,12 +24,11 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
-//import android.widget.Toast;
+import android.widget.Toast;
 
 import com.google.zxing.client.android.IntentIntegrator;
 import com.google.zxing.client.android.IntentResult;
 
-import org.json.JSONObject;
 
 @TargetApi(14)
 public class GameActivity extends Activity {
@@ -294,6 +295,7 @@ public class GameActivity extends Activity {
                         mGameIsPaused = false;
                         team1score = 0;
                         team2score = 0;
+                        Toast.makeText(GameActivity.this, "Tap to Continue", Toast.LENGTH_LONG).show();
                         updateScore(text, text2);
                         sr.setScore(mTableId, String.valueOf(team1score), String.valueOf(team2score));
                         sr.newGame(mTableId);
