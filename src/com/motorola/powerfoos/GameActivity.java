@@ -295,7 +295,6 @@ public class GameActivity extends Activity {
                         mGameIsPaused = false;
                         team1score = 0;
                         team2score = 0;
-                        Toast.makeText(GameActivity.this, "Tap to Continue", Toast.LENGTH_LONG).show();
                         updateScore(text, text2);
                         sr.setScore(mTableId, String.valueOf(team1score), String.valueOf(team2score));
                         sr.newGame(mTableId);
@@ -311,6 +310,8 @@ public class GameActivity extends Activity {
                             mGameIsOver = true;
                             text2.setText(team1score + " Winner!");
                             text.setText(team2score + " Loser...");
+                            Toast.makeText(GameActivity.this, "Tap to Continue", Toast.LENGTH_LONG).show();
+
                         } else {
                             pauseGame(text, text2);
                             mHandler.postDelayed(unPause, PAUSE_LENGTH);
@@ -323,6 +324,8 @@ public class GameActivity extends Activity {
                             mGameIsOver = true;
                             text.setText(team2score + " Winner!");
                             text2.setText(team1score + " Loser...");
+                            Toast.makeText(GameActivity.this, "Tap to Continue", Toast.LENGTH_LONG).show();
+
                         } else {
                             pauseGame(text, text2);
                             mHandler.postDelayed(unPause, PAUSE_LENGTH);
