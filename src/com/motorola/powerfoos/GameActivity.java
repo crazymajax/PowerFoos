@@ -111,32 +111,15 @@ public class GameActivity extends Activity {
                 @Override
                 public void run() {
                     View v = findViewById(R.id.player1);
-                    if (position == 1) {
-                        v.setBackgroundColor(0xFF0000);
-                    } else {
-                        v.setBackgroundColor(0x000000);
-                    }
-
-                    v = findViewById(R.id.player2);
                     if (position == 2) {
-                        v.setBackgroundColor(0xFF0000);
-                    } else {
-                        v.setBackgroundColor(0x000000);
+                        v = findViewById(R.id.player2);
+                    } else if (position == 3) {
+                        v = findViewById(R.id.player3);
+                    } else if (position == 4) {
+                        v = findViewById(R.id.player4);
                     }
-
-                    v = findViewById(R.id.player3);
-                    if (position == 3) {
-                        v.setBackgroundColor(0xFF0000);
-                    } else {
-                        v.setBackgroundColor(0x000000);
-                    }
-
-                    v = findViewById(R.id.player4);
-                    if (position == 4) {
-                        v.setBackgroundColor(0xFF0000);
-                    } else {
-                        v.setBackgroundColor(0x000000);
-                    }
+                    v.setScaleX(1.5f);
+                    v.setScaleY(1.5f);
                 }
             });
         }

@@ -8,6 +8,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:orientation="horizontal">
 
         <TextView
@@ -15,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_medium"
-            android:text="0 - "
+            android:text="0  - "
             android:textSize="50dp"
             tools:context=".GameActivity" />
 
@@ -24,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_medium"
+            android:paddingBottom="5dp"
             android:text="0"
             android:textSize="50dp"
             android:rotation="180"
@@ -38,9 +41,19 @@
         android:layout_margin="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="#000000"
-        android:padding="10dp"
+        android:rotation="180"
         android:src="@drawable/default_usrimg"/>
+    <TextView
+        android:id="@+id/name1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:layout_toRightOf="@id/player1"
+        android:layout_alignTop="@id/player1"
+        android:text="Player1"
+        android:textSize="12dp"
+        android:rotation="180"
+        tools:context=".GameActivity" />
 
     <ImageView
         android:id="@+id/player2"
@@ -50,9 +63,19 @@
         android:layout_margin="20dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="#000000"
-        android:padding="10dp"
+        android:rotation="180"
         android:src="@drawable/default_usrimg"/>
+    <TextView
+        android:id="@+id/name2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:layout_toLeftOf="@id/player2"
+        android:layout_alignTop="@id/player2"
+        android:text="Player2"
+        android:textSize="12dp"
+        android:rotation="180"
+        tools:context=".GameActivity" />
 
     <ImageView
         android:id="@+id/player3"
@@ -62,9 +85,17 @@
         android:layout_margin="20dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:background="#000000"
-        android:padding="10dp"
         android:src="@drawable/default_usrimg_yellow"/>
+    <TextView
+        android:id="@+id/name3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:layout_toLeftOf="@id/player3"
+        android:layout_alignBottom="@id/player3"
+        android:text="Player3"
+        android:textSize="12dp"
+        tools:context=".GameActivity" />
 
     <ImageView
         android:id="@+id/player4"
@@ -74,7 +105,15 @@
         android:layout_margin="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:background="#000000"
-        android:padding="10dp"
         android:src="@drawable/default_usrimg_yellow"/>
+    <TextView
+        android:id="@+id/name4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:layout_toRightOf="@id/player4"
+        android:layout_alignBottom="@id/player4"
+        android:text="Player4"
+        android:textSize="12dp"
+        tools:context=".GameActivity" />
 </RelativeLayout>
