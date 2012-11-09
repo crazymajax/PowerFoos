@@ -45,7 +45,9 @@ public class ScanQRCodeActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				mHandler = new MyHandler();
-				ServerRequest req = new ServerRequest("http://10.75.176.65:8080/FoosballServer/score/getScore?tableId=23456", mHandler);
+				ServerRequest.setServerAddress("10.75.176.65");
+				ServerRequest req = new ServerRequest(mHandler);
+				req.getScore("23456");
 				req.makeRequest();				
 			}
 			

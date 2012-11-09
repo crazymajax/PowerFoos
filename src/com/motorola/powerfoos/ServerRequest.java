@@ -18,21 +18,100 @@ import android.os.Message;
 
 public class ServerRequest {
 	
-	private Handler mHandler; 
-	String mUrl; 
+	protected static String sServerAddress; 
 	
-	public ServerRequest (String url, Handler handler) {
+	/**
+	 * Set the IP address of the server
+	 * @param svrIPAddress Server IP address
+	 */
+	public static void setServerAddress(String svrIPAddress) {
 		
-		mUrl  = url; 
-		mHandler = handler; 
+		sServerAddress = svrIPAddress;
 	}
 	
+	private Handler mHandler; 
+	
+	String mUrl; 
+	
+	/**
+	 * 
+	 * @param handler handler on which the result will be sent
+	 */
+	public ServerRequest (Handler handler) {
+		
+		//mUrl  = url; 
+		mHandler = handler; 
+	}
+
+	/**
+	 * Create player.
+	 * @param playerId ID of the player
+	 * @param name Name of the player
+	 */
+	public void createPlayer (String playerId, String name) {
+		
+		//Create a url using the server address and the parameters 
+		mUrl = String.format("http://%s:8080/FoosballServer/player/create?playerId=%s&name=%s", ServerRequest.sServerAddress, playerId, name);
+	}
+	
+	
+	
+	/**
+	 * Join a game 
+	 * @param playerId	ID of the player
+	 * @param position	Position of the player on the table
+	 * @param tableId	Id of the table
+	 */
+	public void joinGame (String playerId, String position, String tableId) {
+		
+		mUrl = String.format("http://%s:8080/FoosballServer/player/join?playerId=%s&position=%s&tableId=%s", 
+						ServerRequest.sServerAddress, playerId, position, tableId);
+		
+	}
+	
+	
+	/**
+	 * Set the table score
+	 * @param tableId	ID of the table
+	 * @param blackScore	Score of the black team
+	 * @param yellowScore	score of the yellow team
+	 */
+	public void setScore (String tableId, String blackScore, String yellowScore) {
+		
+		mUrl = String.format("http://%s:8080/FoosballServer/score/setScore?tableId=%s&black=%s&yellow=%s", 
+						ServerRequest.sServerAddress, tableId, blackScore, yellowScore);
+		
+	}
+	
+		
+	/**
+	 * Get the score of the table
+	 * @param tableId ID of the table
+	 */
+	public void getScore (String tableId) {
+		
+		mUrl = String.format("http://%s:8080/FoosballServer/score/getScore?tableId=%s", 
+				ServerRequest.sServerAddress, tableId);
+	}
+	
+	
+	/**
+	 * Make a request. On receiving a response from the result will be sent via the handler. 
+	 * The key used to get the result is "result"
+	 * Sample code to get the result 
+	 * public void handleMessage(Message msg) {
+     *		String result; 
+     *		Bundle b = msg.getData();
+     *		result = b.getString("result");
+     * }
+	 */
 	public void makeRequest () {
 		
 		RequestTask task = new RequestTask();
-	    task.execute(new String[] { mUrl });
-		
+	    task.execute(new String[] { mUrl });		
 	}
+	
+	
 	
 	public class RequestTask extends AsyncTask<String, Void, String> {
 
