@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
@@ -27,11 +28,51 @@ public class GameActivity extends Activity {
     private int team1score = 0;
     private int team2score = 0;
     private boolean gameIsPaused = false;
-    private long goalTime = System.currentTimeMillis();
     private WakeLock mWakeLock;
     private String tableId = null;
     private Integer position = 0;
     private MediaPlayer mp;
+    private Handler mHandler = new Handler();
+
+    private Runnable unPause = new Runnable() {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView text = (TextView)findViewById(R.id.text);
+                    TextView text2 = (TextView)findViewById(R.id.text2);
+                    resumeGame(text, text2);
+                }
+            });
+        }
+    };
+
+    private void pauseGame(TextView text, TextView text2) {
+        gameIsPaused = true;
+        text.setText("Game\nPaused");
+        text2.setText("Game\nPaused");
+        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(500);
+        anim.setStartOffset(20);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+        text.startAnimation(anim);
+        text2.startAnimation(anim);
+    }
+
+    private void resumeGame(TextView text, TextView text2) {
+        gameIsPaused = false;
+        Animation animation = text.getAnimation();
+        if (animation != null) {
+            animation.cancel();
+        }
+        animation = text2.getAnimation();
+        if (animation != null) {
+            animation.cancel();
+        }
+        updateScore(text, text2);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +82,6 @@ public class GameActivity extends Activity {
         if (tableId == null) {
             IntentIntegrator integrator = new IntentIntegrator(this);
             integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
-//            return;
         }
 
         View container = findViewById(R.id.container);
@@ -51,45 +91,28 @@ public class GameActivity extends Activity {
                 long currentTime = System.currentTimeMillis();
                 TextView text = (TextView)findViewById(R.id.text);
                 TextView text2 = (TextView)findViewById(R.id.text2);
-                if (event.getButtonState() == MotionEvent.BUTTON_PRIMARY) {
-                    if((currentTime - goalTime) >= 5000){
+
+                if (!gameIsPaused) {
+                    if (event.getButtonState() == MotionEvent.BUTTON_PRIMARY) {
                         team1score++;
-                        goalTime = currentTime;
-                        text.setText(team1score + " - ");
                         playGoalMusic();
-                    }
-                } else if (event.getButtonState() == MotionEvent.BUTTON_SECONDARY) {
-                    if((currentTime - goalTime) >= 5000){
+                        pauseGame(text, text2);
+                        mHandler.postDelayed(unPause, 5000);
+                    } else if (event.getButtonState() == MotionEvent.BUTTON_SECONDARY) {
                         team2score++;
-                        goalTime = currentTime;
-                        text2.setText(team2score);
                         playGoalMusic();
+                        pauseGame(text, text2);
+                        mHandler.postDelayed(unPause, 5000);
                     }
-                } else if (!gameIsPaused) {
-                    gameIsPaused = true;
-                    text.setText("Game Paused");
-                    text2.setText("Game Paused");
-                    Animation anim = new AlphaAnimation(0.0f, 1.0f);
-                    anim.setDuration(500);
-                    anim.setStartOffset(20);
-                    anim.setRepeatMode(Animation.REVERSE);
-                    anim.setRepeatCount(Animation.INFINITE);
-                    text.startAnimation(anim);
-                    text2.startAnimation(anim);
-                    return false;
-                }
-                gameIsPaused = false;
-                Animation animation = text.getAnimation();
-                if (animation != null) {
-                    animation.cancel();
-                }
-                animation = text2.getAnimation();
-                if (animation != null) {
-                    animation.cancel();
                 }
                 return false;
             }
         });
+    }
+
+    private void updateScore(TextView text, TextView text2) {
+        text.setText(team1score + " - ");
+        text2.setText(String.valueOf(team2score));
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -120,6 +143,11 @@ public class GameActivity extends Activity {
                     }
                     v.setScaleX(1.5f);
                     v.setScaleY(1.5f);
+
+                    if (position < 3) {
+                        View c = findViewById(R.id.container);
+                        c.setRotation(180);
+                    }
                 }
             });
         }
