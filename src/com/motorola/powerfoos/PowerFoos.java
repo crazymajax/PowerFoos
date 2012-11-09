@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
 import com.google.zxing.client.android.PreferencesActivity;
 
 public class PowerFoos extends Activity {
@@ -27,6 +26,8 @@ public class PowerFoos extends Activity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mSoundOn = pref.getBoolean("sound_on", true);
         playIntroMusic();
+        mp = MediaPlayer.create(getApplicationContext(), R.raw.intro);
+        mp.start();
 
         Button start = (Button)findViewById(R.id.start);
         Button settings = (Button)findViewById(R.id.settings);
@@ -44,6 +45,7 @@ public class PowerFoos extends Activity {
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     if (pref.getString(FOOS_EMAIL_ID, null)!=null) {
                         startActivity(new Intent(PowerFoos.this, GameActivity.class));
+                        //onStartClicked(v);
                     }else{
                         onStartClicked(v);
                     }
@@ -96,6 +98,7 @@ public class PowerFoos extends Activity {
     }
 
     @Override
+
     protected void onResume() {
         super.onResume();
         mp = MediaPlayer.create(getApplicationContext(), R.raw.intro);
@@ -111,5 +114,12 @@ public class PowerFoos extends Activity {
     private void playIntroMusic(){
         if (mSoundOn && mp != null)
             mp.start();
+
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        if(mp!=null)
+            mp.release();
+        super.onDestroy();
+
     }
 }

@@ -22,7 +22,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+//import android.widget.Toast;
 
 import com.google.zxing.client.android.IntentIntegrator;
 import com.google.zxing.client.android.IntentResult;
@@ -54,7 +54,7 @@ public class GameActivity extends Activity {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String result = data.getString("result");
-//            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+//            //Toast.makeText(getApplicationContext(), result, //Toast.LENGTH_LONG).show();
             Log.d(TAG, "MAJAX: Server Result: " + result);
 
             try {
@@ -296,6 +296,7 @@ public class GameActivity extends Activity {
                         team2score = 0;
                         updateScore(text, text2);
                         sr.setScore(mTableId, String.valueOf(team1score), String.valueOf(team2score));
+                        sr.newGame(mTableId);
                     }
                     return false;
                 }
@@ -351,15 +352,16 @@ public class GameActivity extends Activity {
             String contents = result.getContents();
             Log.d(TAG, "scan result is:" + contents);
             final Context appCtx = getApplicationContext();
-            Toast.makeText(appCtx, contents, Toast.LENGTH_LONG).show();
+            //Toast.makeText(appCtx, contents, //Toast.LENGTH_LONG).show();
 
             if (contents == null) {
+                GameActivity.this.finish();
                 return;
             }
 
             String[] array = contents.split("::");
             if (array == null || array.length != 2) {
-                Toast.makeText(appCtx, "Invalid QR code: " + contents, Toast.LENGTH_LONG).show();
+                //Toast.makeText(appCtx, "Invalid QR code: " + contents, //Toast.LENGTH_LONG).show();
             }
             mTableId = array[0];
             mPosition = Integer.valueOf(array[1]);

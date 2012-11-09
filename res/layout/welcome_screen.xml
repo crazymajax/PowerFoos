@@ -14,6 +14,16 @@
         tools:context=".PowerFoos" />
 
     <TextView
+        android:id="@+id/textView_welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:text="@string/welcome_text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@id/textView_welcome"
+        tools:context=".PowerFoos" />
+
+    <TextView
         android:id="@+id/textView_select_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +33,7 @@
         android:layout_marginTop="9dp"
         android:text="@string/select_an_account"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@id/textView_welcome" />
+        android:layout_below="@id/textView_welcome_text" />
 
     <Spinner
         android:id="@+id/accounts_spinner"
@@ -45,7 +55,6 @@
         style="@style/MainMenuButton"
         android:onClick="onNextClicked"
         android:text="@string/next" />
-
 
     <!-- <ScrollView
         android:id="@+id/scroll_card"
