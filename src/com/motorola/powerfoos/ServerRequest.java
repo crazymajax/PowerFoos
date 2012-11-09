@@ -11,32 +11,38 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 
 public class ServerRequest {
 
-    protected static String sServerAddress = "10.75.176.65";
+    private static final String DEFAULT_SERVER_IP = "10.75.176.65";
+    protected static String sServerAddress = DEFAULT_SERVER_IP;
     private Handler mHandler;
     String mUrl;
 
     /**
      * @param handler handler on which the result will be sent
      */
-    public ServerRequest(Handler handler) {
+    public ServerRequest(Context context, Handler handler) {
         mHandler = handler;
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        preferences.getString("server_ip", DEFAULT_SERVER_IP);
     }
 
-    /**
-     * Set the IP address of the server
-     * @param svrIPAddress Server IP address
-     */
-    public static void setServerAddress(String svrIPAddress) {
-
-        sServerAddress = svrIPAddress;
-    }
+//    /**
+//     * Set the IP address of the server
+//     * @param svrIPAddress Server IP address
+//     */
+//    public static void setServerAddress(String svrIPAddress) {
+//        sServerAddress = svrIPAddress;
+//    }
 
 
     /**
@@ -160,7 +166,7 @@ public class ServerRequest {
      * @param playerId ID of the player you want stats for
      */
     public void getPlayerStats(String playerId) {
-        mUrl = String.format("http://%s:8080/FoosballServer/score/getPlayers?playerId=%s",
+        mUrl = String.format("http://%s:8080/FoosballServer/player/getPlayerStats?playerId=%s",
                 ServerRequest.sServerAddress, playerId);
         makeRequest();
     }
@@ -170,7 +176,7 @@ public class ServerRequest {
      * @param tableId ID of the table
      */
     public void getPlayers(String tableId) {
-        mUrl = String.format("http://%s:8080/FoosballServer/score/getPlayers?tableId=%s",
+        mUrl = String.format("http://%s:8080/FoosballServer/player/getPlayers?tableId=%s",
                 ServerRequest.sServerAddress, tableId);
         makeRequest();
     }
@@ -193,7 +199,7 @@ public class ServerRequest {
      */
     public void endGame(String tableId) {
         //Create a url using the server address and the parameters
-        mUrl = String.format("http://%s:8080/FoosballServer/player/end?tableId=%s",
+        mUrl = String.format("http://%s:8080/FoosballServer/game/end?tableId=%s",
                 ServerRequest.sServerAddress, tableId);
         makeRequest();
     }

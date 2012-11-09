@@ -1,5 +1,7 @@
 package com.motorola.powerfoos;
 
+import com.google.zxing.client.android.PreferencesActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,7 +44,8 @@ public class PowerFoos extends Activity {
             settings.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "User pressed settings", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "User pressed settings", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(PowerFoos.this, PreferencesActivity.class));
                 }
             });
         }

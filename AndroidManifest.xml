@@ -40,6 +40,10 @@
             android:screenOrientation="landscape">
         </activity>
 
+        <activity
+            android:name="com.google.zxing.client.android.PreferencesActivity">
+        </activity>
+
         <!-- Added for qrcode scanning-->
         <activity
             android:name=".ScanQRCodeActivity"

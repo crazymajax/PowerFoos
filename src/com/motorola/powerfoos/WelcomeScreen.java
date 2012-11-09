@@ -36,13 +36,15 @@ public class WelcomeScreen extends Activity {
             Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         }
     };
-    private ServerRequest sr = new ServerRequest(mServerHandler);
+    private ServerRequest sr;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_screen);
+
+        sr = new ServerRequest(getApplicationContext(), mServerHandler);
 
         Spinner accountListSpinner = (Spinner) findViewById(R.id.accounts_spinner);
         if(accountListSpinner!=null){
