@@ -1,0 +1,43 @@
+﻿Replace localhost with: 10.75.176.65
+
+
+Create Player:
+Create Player: http://localhost:8080/FoosballServer/player/create?playerId=test1&name=test1
+
+
+Join Game:
+http://localhost:8080/FoosballServer/player/join?playerId=test1&position=1&tableId=23456
+
+
+Set Score:
+http://localhost:8080/FoosballServer/score/setScore?tableId=23456&black=2&yellow=2
+
+
+GetScore
+http://localhost:8080/FoosballServer/score/getScore?tableId=23456
+Result-->{"message":"Found the tableId","result":"success","yellow":"2","black":"2"}
+
+
+GetPlayers
+http://localhost:8080/FoosballServer/player/getPlayers?tableId=23456
+
+
+Result-->["test1","test1",""]
+
+
+EndGame 
+http://localhost:8080/FoosballServer/game/end?tableId=23456
+
+
+Result--> 
+{"message":"Ending game. Number of players joined the game were 1","result":"success"}
+
+
+Get PlayerStats:
+
+
+http://localhost:8080/FoosballServer/player/getPlayerStats?playerId=crazymajax@gmail.com
+
+
+Result-->
+{"position":"4","lossCount":null,"winCount":null}
